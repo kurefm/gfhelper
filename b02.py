@@ -124,8 +124,9 @@ def use_g11():
     common.change_people(4)
     core.random_wait_lite(2)
     common.select_people(1, 4)
-    core.random_wait_lite(2)
+    core.random_wait()
 
+    common.formation_echelon(2)
     common.formation_echelon(2)
     core.random_wait()
 
@@ -146,8 +147,9 @@ def use_fal():
     common.change_people(4)
     core.random_wait_lite(2)
     common.select_people(2, 2)
-    core.random_wait_lite(2)
+    core.random_wait()
 
+    common.formation_echelon(2)
     common.formation_echelon(2)
     core.random_wait()
 

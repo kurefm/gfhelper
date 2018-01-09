@@ -10,7 +10,7 @@ RANDOM_WAIT_MIN = 2000
 STD_WAIT = 4000
 FIGHT_WAIT = 27000
 SWIPE_OFFSET = 5
-PRESS_DURATION = 100
+PRESS_DURATION = 150
 SCROLL_DURATION = 1000
 
 ADB_PATH = "/home/kurefm/Apps/android/platform-tools/adb"
@@ -81,12 +81,12 @@ def resize(any):
         return any * R
 
 
-def press(x, y, duration=PRESS_DURATION):
+def press(x, y, duration=random.randrange(75, 100)):
     __logger.debug("Press {0}, {1}".format(x, y))
     if duration:
         subprocess.check_call(strify([ADB_PATH, 'shell', 'input', 'swipe',
                                       x, y,
-                                      swipe_offset() + x, swipe_offset() + y,
+                                      x, y,
                                       duration]))
     else:
         subprocess.check_call(strify([ADB_PATH, 'shell', 'input', 'tap', x, y]))
