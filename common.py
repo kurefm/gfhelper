@@ -3,6 +3,10 @@
 from random import randrange
 import core
 import logging
+from PIL import Image
+import imagehash
+from cStringIO import StringIO
+from gfhelper.core import screencap
 
 RESERVED_OFFSET = 10
 
@@ -53,6 +57,9 @@ END_ROUND_REGION = 1648, 932, 1883, 1049
 
 BACK_REGION = 6, 6, 198, 137
 
+TOGGLE_PLAN_MODE = 0, 854, 214, 919
+EXEC_PLAN = 1654, 921, 1903, 1030
+
 __logger = logging.getLogger(__name__)
 
 
@@ -99,7 +106,8 @@ def select_battle(name):
     t = name[3] if len(name) == 4 else None
 
     press(BATTLE_A_REGION[a])
-    core.random_wait()
+    press(BATTLE_A_REGION[a])
+    core.random_wait_lite(2)
     press(BATTLE_B_REGION[b])
     __logger.info("Select battle " + name)
 
@@ -136,14 +144,25 @@ def supply():
     press(SUPPLY_REGION)
 
 
-def finish_fight(times=4):
+def finish_fight():
     __logger.info("Finish fight")
-    for i in range(times - 1):
-        core.press_center()
-        core.random_wait_lite()
     core.press_center()
+    core.press_center()
+
+    core.wait(300)
+
+    img = Image.open(StringIO(screencap()))
+
+    img = img.crop((470, 100, 1020, 750))
+
+    hash = imagehash.dhash(img, 16)
+
+    img.save('screenshot/unknown/{}.png'.format(hash))
+
+    core.press_center()
+    core.press_center()
+
     core.wait(1500)
-    core.random_wait_lite()
 
 
 def end_round():
@@ -198,3 +217,11 @@ def remove_people():
 
 def back():
     press(BACK_REGION)
+
+
+def toggle_plan_mode():
+    press(TOGGLE_PLAN_MODE)
+
+
+def exec_plan():
+    press(EXEC_PLAN)

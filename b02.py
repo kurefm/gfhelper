@@ -3,6 +3,10 @@
 import common
 import core
 import logging
+from gfhelper.core import screencap
+from cStringIO import StringIO
+import imagehash
+from PIL import Image
 
 DEPLOY_POINT_1 = 922, 478, 1048, 604  # 指挥部
 DEPLOY_POINT_2 = 346, 481, 436, 571  # 机场LB
@@ -66,7 +70,7 @@ def attack_1():
     common.press(ATTACK_POINT_1_BEFORE)
     __logger.info("Attack point 1")
     core.std_wait()
-    core.wait_fight_end()
+    core.wait_fight_end(21000)
     common.finish_fight()
 
 
@@ -76,7 +80,7 @@ def attack_2():
     common.press(ATTACK_POINT_2_BEFORE)
     __logger.info("Attack point 2")
     core.std_wait()
-    core.wait_fight_end()
+    core.wait_fight_end(21000)
     common.finish_fight()
 
 
@@ -90,7 +94,7 @@ def attack_3():
     common.press(ATTACK_POINT_3)
     __logger.info("Attack point 3")
     core.std_wait()
-    core.wait_fight_end(20000)
+    core.wait_fight_end()
     common.finish_fight()
 
 
@@ -100,7 +104,7 @@ def attack_4():
     common.press(ATTACK_POINT_4)
     __logger.info("Attack point 4")
     core.std_wait()
-    core.wait_fight_end(22000)
+    core.wait_fight_end()
     common.finish_fight()
 
 
@@ -110,7 +114,7 @@ def attack_5():
     common.press(ATTACK_POINT_5)
     __logger.info("Attack point 5")
     core.std_wait()
-    core.wait_fight_end(22000)
+    core.wait_fight_end()
     common.finish_fight()
 
 
@@ -124,6 +128,7 @@ def use_g11():
     common.change_people(4)
     core.random_wait_lite(2)
     common.select_people(1, 4)
+
     core.random_wait()
 
     common.formation_echelon(2)
@@ -147,6 +152,7 @@ def use_fal():
     common.change_people(4)
     core.random_wait_lite(2)
     common.select_people(2, 2)
+
     core.random_wait()
 
     common.formation_echelon(2)
@@ -157,6 +163,59 @@ def use_fal():
     core.random_wait_lite(2)
     common.select_people(1, 4)
     core.random_wait_lite(2)
+    common.back()
+
+
+def is_g11():
+    return str(imagehash.dhash(Image.open(StringIO(screencap())).crop((1056, 310, 1296, 550)), 16)) \
+           == '8f564d6bdb8fce8f470f6b2799ab4cd963392d99364972696b2667b57499350d'
+
+
+def is_fal():
+    return str(imagehash.dhash(Image.open(StringIO(screencap())).crop((1056, 310, 1296, 550)), 16)) \
+           == '1caf2b292b3c5d0ed60da29483ff312c368d394c3c4e2f4e9797930f91cfb9c7'
+
+
+def change_bully():
+    common.formation()
+    core.std_wait()
+    while True:
+        if is_g11():
+            common.change_people(4)
+            core.random_wait_lite(2)
+            common.select_people(2, 2)
+
+            core.random_wait()
+
+            common.formation_echelon(2)
+            common.formation_echelon(2)
+            core.random_wait()
+
+            common.change_people(1)
+            core.random_wait_lite(2)
+            common.select_people(1, 4)
+            core.random_wait_lite(2)
+            break
+        elif is_fal():
+            common.change_people(4)
+            core.random_wait_lite(2)
+            common.select_people(1, 4)
+
+            core.random_wait()
+
+            common.formation_echelon(2)
+            common.formation_echelon(2)
+            core.random_wait()
+
+            common.change_people(1)
+            core.random_wait_lite(2)
+            common.select_people(2, 2)
+            core.random_wait_lite(2)
+            break
+        else:
+            __logger.error('请手动进入队伍编成界面')
+            core.wait(5000)
+
     common.back()
 
 
@@ -193,4 +252,49 @@ def auto_battle():
     attack_5()
     core.std_wait()
 
+    common.end_battle()
+
+
+def auto_battle_via_plain_mode():
+    enter_battle()
+    core.std_wait()
+
+    deploy_echelon()
+    core.random_wait()
+
+    common.start_battle()
+    core.std_wait()
+
+    supply()
+    core.std_wait()
+
+    common.toggle_plan_mode()
+    core.random_wait_lite()
+
+    core.scroll_up(300)
+    common.press([915, 751, 1045, 800])  # +300, point0
+    common.press([693, 621, 794, 722])  # +300, point1
+    common.press([749, 304, 844, 399])  # +300, point2
+    core.scroll_up(300)
+    common.press([954, 279, 1055, 380])  # +600, point3
+    common.press([733, 137, 835, 239])  # +600, point4
+    common.exec_plan()
+
+    core.wait(113 * 1000)
+
+    common.end_round()
+    common.end_round()
+    core.std_wait()
+    core.wait(12000)
+    core.random_wait()
+
+    common.toggle_plan_mode()
+    common.press(ATTACK_POINT_3)
+    common.press(ATTACK_POINT_4)
+    common.press(ATTACK_POINT_5)
+    common.exec_plan()
+
+    core.wait(68 * 1000)
+
+    common.end_round()
     common.end_battle()

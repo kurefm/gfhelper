@@ -8,9 +8,9 @@ import logging
 RANDOM_WAIT_MAX = 3500
 RANDOM_WAIT_MIN = 2000
 STD_WAIT = 4000
-FIGHT_WAIT = 27000
+FIGHT_WAIT = 15000
 SWIPE_OFFSET = 5
-PRESS_DURATION = 150
+PRESS_DURATION = 100
 SCROLL_DURATION = 1000
 
 ADB_PATH = "/home/kurefm/Apps/android/platform-tools/adb"
@@ -32,7 +32,6 @@ def wait(time):
 def random_wait():
     """
     用于解决脚本探测和软件卡顿
-    :return:
     """
     __logger.info("Wait a moment")
     wait(random.randrange(RANDOM_WAIT_MIN, RANDOM_WAIT_MAX))
@@ -41,7 +40,6 @@ def random_wait():
 def random_wait_lite(r=5):
     """
     用于解决脚本探测和软件卡顿
-    :return:
     """
     wait(random.randrange(RANDOM_WAIT_MIN / r, RANDOM_WAIT_MAX / r))
 
@@ -49,7 +47,6 @@ def random_wait_lite(r=5):
 def std_wait():
     """
     用于解决网络延迟
-    :return:
     """
     __logger.info("Wait network")
     wait(STD_WAIT)

@@ -2,3 +2,6 @@
 screenshot/
 .idea/
 *.iml
+*.log
+*.egg-info/
+sample/

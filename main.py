@@ -1,19 +1,22 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from gfhelper.app import app
 
-import common
+app.setup()
+
 import core
 import b02
 import logging
 import time
-from logging.config import fileConfig
+import notify2
 
 if __name__ == '__main__':
     logging.basicConfig(
         level=logging.DEBUG,
-        format="%(asctime)s | %(name)-6s | %(levelname)-5s : %(message)s",
+        format="%(asctime)s [%(threadName)s] %(levelname)-5s %(module)s@%(funcName)s#L%(lineno)d - %(message)s",
     )
+    notify2.init('gfhelper')
 
     logging.getLogger().debug("---------- START ----------")
 
@@ -23,12 +26,19 @@ if __name__ == '__main__':
 
     b02.auto_battle()
     core.std_wait()
-    b02.use_fal()
+    b02.change_bully()
     core.std_wait()
+
+    notify2.Notification('GfHelper', 'Round 1 finish.').show()
 
     b02.auto_battle()
     core.std_wait()
-    b02.use_g11()
+    b02.change_bully()
+
+    notify2.Notification(
+        'GfHelper',
+        'Script run end.\nScript run end.\nScript run end.\nScript run end.\nScript run end.'
+    ).show()
 
     logging.getLogger("Main").info("Run time %ds" % (time.time() - start_at))
 
