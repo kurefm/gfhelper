@@ -13,6 +13,7 @@ import click
 from gfhelper import config
 import logging
 from logging.config import fileConfig
+from glob import glob
 
 
 def resolve_path(path, *paths):
@@ -53,9 +54,15 @@ class App(object):
 
     def setup(self):
         self.prepare()
-        self._config = config.MultiConfig()
-        self._config.append(self.get_app_path('default.ini'), flags=config.READONLY)
-        self._config.append(self.get_ext_path('config.ini'))
+        self._config = config.YAMLConfig()
+
+        for filename in glob(self.get_app_path('yaml.d/*.yaml')):
+            self._config.append(filename, flags=config.YAMLConfig.READONLY)
+
+        for filename in glob(self.get_app_path('gfhelper/script/*.yaml')):
+            self._config.append(filename, flags=config.YAMLConfig.READONLY)
+
+        self._config.append(self.get_ext_path('config.yaml'))
 
         # log config
 

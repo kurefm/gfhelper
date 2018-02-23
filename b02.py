@@ -70,7 +70,7 @@ def attack_1():
     common.press(ATTACK_POINT_1_BEFORE)
     __logger.info("Attack point 1")
     core.std_wait()
-    core.wait_fight_end(21000)
+    core.wait_fight_end()
     common.finish_fight()
 
 
@@ -80,7 +80,7 @@ def attack_2():
     common.press(ATTACK_POINT_2_BEFORE)
     __logger.info("Attack point 2")
     core.std_wait()
-    core.wait_fight_end(21000)
+    core.wait_fight_end()
     common.finish_fight()
 
 
@@ -167,23 +167,33 @@ def use_fal():
 
 
 def is_g11():
-    return str(imagehash.dhash(Image.open(StringIO(screencap())).crop((1056, 310, 1296, 550)), 16)) \
+    return str(imagehash.dhash(screencap().crop((1056, 310, 1296, 550)), 16)) \
            == '8f564d6bdb8fce8f470f6b2799ab4cd963392d99364972696b2667b57499350d'
 
 
 def is_fal():
-    return str(imagehash.dhash(Image.open(StringIO(screencap())).crop((1056, 310, 1296, 550)), 16)) \
+    return str(imagehash.dhash(screencap().crop((1056, 310, 1296, 550)), 16)) \
            == '1caf2b292b3c5d0ed60da29483ff312c368d394c3c4e2f4e9797930f91cfb9c7'
+
+
+def is_m4a1():
+    return str(imagehash.dhash(screencap().crop((1056, 310, 1296, 550)), 16)) \
+           == '8cb68ed38e4b8d0dce260b024f8cc79a97ce0f0fcda6c78607a5958d329b709a'
+
+
+def is_ar15():
+    return str(imagehash.dhash(screencap().crop((1056, 310, 1296, 550)), 16)) \
+           == '095d5b3656060e83873ba3735443191f6b72636c15e87391f6198f980f091d8d'
 
 
 def change_bully():
     common.formation()
     core.std_wait()
     while True:
-        if is_g11():
+        if is_m4a1():
             common.change_people(4)
             core.random_wait_lite(2)
-            common.select_people(2, 2)
+            common.select_people(1, 2)
 
             core.random_wait()
 
@@ -193,13 +203,13 @@ def change_bully():
 
             common.change_people(1)
             core.random_wait_lite(2)
-            common.select_people(1, 4)
+            common.select_people(1, 3)
             core.random_wait_lite(2)
             break
-        elif is_fal():
+        elif is_ar15():
             common.change_people(4)
             core.random_wait_lite(2)
-            common.select_people(1, 4)
+            common.select_people(1, 3)
 
             core.random_wait()
 
@@ -209,7 +219,7 @@ def change_bully():
 
             common.change_people(1)
             core.random_wait_lite(2)
-            common.select_people(2, 2)
+            common.select_people(1, 2)
             core.random_wait_lite(2)
             break
         else:

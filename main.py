@@ -12,10 +12,6 @@ import time
 import notify2
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(threadName)s] %(levelname)-5s %(module)s@%(funcName)s#L%(lineno)d - %(message)s",
-    )
     notify2.init('gfhelper')
 
     logging.getLogger().debug("---------- START ----------")

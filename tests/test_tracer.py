@@ -12,7 +12,7 @@ import random
 import sys
 import time
 
-traceable = partial(tracer.traceable, prefix=__name__)
+traceable = tracer.traceable
 
 
 @traceable()

@@ -151,14 +151,17 @@ def finish_fight():
 
     core.wait(300)
 
-    img = Image.open(StringIO(screencap()))
+    img = screencap()
 
     img = img.crop((470, 100, 1020, 750))
 
     hash = imagehash.dhash(img, 16)
 
+    __logger.info('Char hash: %s' % hash)
+
     img.save('screenshot/unknown/{}.png'.format(hash))
 
+    core.press_center()
     core.press_center()
     core.press_center()
 

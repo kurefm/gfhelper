@@ -4,105 +4,88 @@
 # date:    2018-01-15 22:38
 # author:  kurefm
 
-from ConfigParser import ConfigParser, NoSectionError, NoOptionError
-
-WRITEABLE = 1
-READONLY = 0
-
-
-class Section(object):
-    def __init__(self, config_parser, section):
-        if section not in config_parser.sections():
-            raise NoSectionError('No section: %s' % section)
-        super(Section, self).__init__()
-        self.__dict__['config'] = config_parser
-        self.__dict__['section'] = section
-
-    def __getattr__(self, option):
-        return self.config.get(self.section, option)
-
-    def __setattr__(self, option, value):
-        self.config.set(self.section, option, value)
-
-    def __iter__(self):
-        return self.config.options(self.section).__iter__()
+from ruamel import yaml
+from ruamel.yaml.comments import CommentedMap
+from .cv import CvDetectionParams
+from .tools import islistortuple
+import functools
+import inspect
+import logging
 
 
-class Configuration(ConfigParser):
-    def __init__(self, filename):
-        ConfigParser.__init__(self)
-        self.filename = filename
-        self.read(filename)
+class YAMLConfig(object):
+    WRITEABLE = 1
+    READONLY = 0
 
-    def __del__(self):
-        self.save()
-
-    def __getattr__(self, section):
-        return Section(self, section)
-
-    def __iter__(self):
-        return self.sections().__iter__()
-
-    def __dir__(self):
-        return dir(ConfigParser) + ['filename', 'save', 'reload']
-
-    def reload(self, filename=None):
-        self.read(filename)
-
-    def save(self, filename=None):
-        filename = self.filename if not filename else filename
-
-        with open(filename, 'wb') as fp:
-            self.write(fp)
-
-
-class MultiConfig(object):
-    def __init__(self, *args):
-        self._configs = []
-        for filename in args:
-            self.append(filename)
-
-    def __del__(self):
-        self.save()
+    def __init__(self):
+        self._raw_configs = []
+        self._yaml = yaml.YAML()
+        self._yaml.register_class(CvDetectionParams)
+        self._logger = logging.getLogger(__name__)
 
     def append(self, filename, flags=WRITEABLE):
-        config = ConfigParser()
-        config.read(filename)
-        # tuple (filename, configparser object, flags)
-        self._configs.append((filename, config, flags))
+        fp, raw_config = None, None
+        try:
+            fp = open(filename)
+            raw_config = self._yaml.load(fp)
+        except IOError:
+            pass
+        finally:
+            fp.close()
+            self._raw_configs.append((
+                filename,  # filename
+                raw_config if raw_config else CommentedMap(),  # config content(nested dict)
+                flags  # flags
+            ))
+            self._logger.info('Load config file: %s' % filename)
 
-    def save(self):
-        for filename, config, flags in self._configs:
-            if flags & WRITEABLE:
-                with open(filename, 'w') as fp:
-                    config.write(fp)
-
-    def get(self, section, option=None, *args):
-        if '.' in section:
-            section, option = section.split('.')
-        for _, config, _ in reversed(self._configs):
-            try:
-                return config.get(section, option, *args) if option else config.items(section, *args)
-            except (NoSectionError, NoOptionError):
-                continue
-        return None
+    def get(self, key):
+        keys = key.split('.')
+        for _, config, _ in reversed(self._raw_configs):
+            for k in keys:
+                config = config.get(k)
+                if not config: break
+            if config: return config
 
     def _find_latest_writable(self):
-        for _, config, flags in reversed(self._configs):
-            if flags & WRITEABLE:
+        for _, config, flags in reversed(self._raw_configs):
+            if flags & YAMLConfig.WRITEABLE:
                 return config
         return None
 
-    def set(self, section, option, value):
+    def set(self, key, value):
         config = self._find_latest_writable()
-        if not config:
+        if config is None:
             raise ValueError('No a writeable file')
+        ks = key.split('.')
+        lk = ks.pop()
+        for k in ks:
+            if config.has_key(k):
+                if not isinstance(config.get(k), CommentedMap):
+                    raise ValueError('Not allow set %s to %s' % (key, value))
+            else:
+                config[k] = CommentedMap()
+            config = config.get(k)
+        config[lk] = value
 
-        if not config.has_section(section):
-            config.add_section(section)
+    def save(self):
+        for filename, config, flags in self._raw_configs:
+            if flags & YAMLConfig.WRITEABLE:
+                with open(filename, 'w') as fp:
+                    self._yaml.dump(config, fp)
 
-        config.set(section, option, value)
+    def inject_args(self, *name):
 
+        def decorator(f):
+            keys = name if name else \
+                ['.'.join([inspect.getmodulename(inspect.getfile(f)), f.__name__])]
 
-class Config(object):
-    pass
+            @functools.wraps(f)
+            def wrapped_func():
+                params = map(self.get, keys)
+
+                return f(*params)
+
+            return wrapped_func
+
+        return decorator

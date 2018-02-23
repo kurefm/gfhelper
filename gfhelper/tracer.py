@@ -9,6 +9,7 @@ from gfhelper.tools import random_id, reprify
 import logging
 import re
 from datetime import datetime
+import inspect
 
 
 class Func(object):
@@ -126,7 +127,7 @@ class Tracer(object):
 
     @property
     def funcs(self):
-        return tuple(self._funcs)  # read only
+        return self._funcs  #TODO make read only
 
     @property
     def isinterrupt(self):
@@ -144,7 +145,8 @@ class Tracer(object):
         """
 
         def decorator(f):
-            func_name = '{}.{}'.format(dkwargs['prefix'], f.__name__) if dkwargs.get('prefix') else f.__name__
+            prefix = dkwargs['prefix'] if dkwargs.get('prefix') else inspect.getmodulename(inspect.getfile(f))
+            func_name = '.'.join([prefix, f.__name__])
             self._funcs[func_name] = f
             self._logger.info('Register function: {}'.format(func_name))
 

@@ -17,12 +17,14 @@ from functools import partial, wraps
 from random import randint
 import logging
 import re
+from cStringIO import StringIO
+from PIL import Image
 
 from .app import app
-from .tools import strify
+from .tools import *
 from .tracer import tracer
 
-_traceable = partial(tracer.traceable, prefix=__name__)
+_traceable = tracer.traceable
 _logger = logging.getLogger(__name__)
 
 
@@ -52,10 +54,10 @@ def adb_shell(*cmd, **kwargs):
 
 
 def screencap():
-    return adb_shell('screencap', '-p').get('stdout')
+    return Image.open(StringIO(adb_shell('screencap', '-p').get('stdout')))
 
 
-@_traceable
+@_traceable()
 def tap(*region):
     """
     tap a region:
@@ -66,6 +68,9 @@ def tap(*region):
     :param region:
     :return:
     """
+    if len(region) == 1 and islistortuple(region):
+        region = region[0]
+
     if len(region) == 2:
         point = region
     elif len(region) == 3:
@@ -85,7 +90,7 @@ def tap(*region):
     )
 
 
-@_traceable
+@_traceable()
 def scroll_up(y):
     adb_shell(
         'input', 'swipe',
@@ -95,7 +100,7 @@ def scroll_up(y):
     )
 
 
-@_traceable
+@_traceable()
 def scroll_down(y):
     adb_shell(
         'input', 'swipe',
@@ -105,22 +110,22 @@ def scroll_down(y):
     )
 
 
-@_traceable
+@_traceable()
 def wait_network(delay=app.config.get('core.network_delay')):
     wait(delay)
 
 
-@_traceable
+@_traceable()
 def wait_animation(delay=app.config.get('core.animation_delay')):
     wait(delay)
 
 
-@_traceable
+@_traceable()
 def wait_load(delay=app.config.get('core.load_delay')):
     wait(delay)
 
 
-@_traceable
+@_traceable()
 def wait(duration):
     time.sleep(duration / 1000.0)
 

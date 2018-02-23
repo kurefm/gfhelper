@@ -4,10 +4,21 @@
 # date:    2018-01-22 12:24
 # author:  kurefm
 
-from .core import _traceable
+from .tracer import tracer
 from functools import partial
+import re
 
-traceable = partial(_traceable, profile=__name__)
+traceable = partial(tracer.traceable, profile=__name__)
+
+
+class Difficulty(object):
+    Normal = 0b001
+    Emergency = 0b010
+    Midnight = 0b100
+
+
+def parse_battle_name(name):
+    re.match(r'(\d{0,2})-(\d)(?:[en]*)', name)
 
 
 @traceable()

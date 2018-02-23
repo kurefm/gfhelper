@@ -13,7 +13,7 @@ setup(
     install_requires=[
         'Click',
         'ImageHash',
-        'PyYAML'
+        'ruamel.yaml'
     ],
     entry_points='''
         [console_scripts]

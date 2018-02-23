@@ -1,0 +1,14 @@
+gfhelper:
+  # Core config
+  core:
+    adb_path: /home/kurefm/Apps/android/platform-tools/adb
+    tap_duration: 51
+    scroll_duration: 501
+    network_delay: 4001
+    current_use:
+  formation:
+    region:
+      enter: [121, 121, 121, 121]
+
+test_config:
+  test_func1: 1
