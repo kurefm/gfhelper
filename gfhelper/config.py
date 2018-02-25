@@ -6,11 +6,49 @@
 
 from ruamel import yaml
 from ruamel.yaml.comments import CommentedMap
-from .cv import CvDetectionParams
-from .tools import islistortuple
 import functools
 import inspect
 import logging
+import imagehash
+import numpy as np
+
+
+class CvDetectionParams(object):
+    def __init__(self, hash, hash_type, crop=None, filter=None, delta=10):
+        self.hash = hash
+        self.hash_type = hash_type
+        self.crop = crop
+        self.filter = filter
+        self.delta = delta
+
+    @property
+    def hash_size(self):
+        return len(self.hash) / 4
+
+    @property
+    def imghash(self):
+        _hash = int(self.hash, 16)
+        return imagehash.ImageHash(np.array([bool((_hash >> i) & 1) for i in range(64 * 4 - 1, -1, -1)]))
+
+
+class BoxModel(object):
+    def __init__(self):
+        self.lt = (0, 0)
+        self.height = 0
+        self.width = 0
+        self.margin = (0, 0)
+
+    def __getitem__(self, item):
+        if isinstance(item, int):
+            item = (0, item)
+        row, col = item
+
+        return (
+            self.lt[0] + (self.width + self.margin[0]) * col,
+            self.lt[1] + (self.height + self.margin[1]) * row,
+            self.lt[0] + self.width * (col + 1) + self.margin[0] * col,
+            self.lt[1] + self.height * (row + 1) + self.margin[1] * row
+        )
 
 
 class YAMLConfig(object):
@@ -21,6 +59,7 @@ class YAMLConfig(object):
         self._raw_configs = []
         self._yaml = yaml.YAML()
         self._yaml.register_class(CvDetectionParams)
+        self._yaml.register_class(BoxModel)
         self._logger = logging.getLogger(__name__)
 
     def append(self, filename, flags=WRITEABLE):

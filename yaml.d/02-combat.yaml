@@ -1,0 +1,163 @@
+combat:
+  enter:
+    region: [1238, 652, 1532, 845]
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      - '#a4a6a4'
+      - '#cecace'
+      hash: '39802d802c80a880ad809d88dc80dc9edc9acc9dcc9dee9d202d243a241a2400'
+      hash_type: dhash
+      crop: [259, 32, 638, 124]
+      delta: 10
+    - !CvDetectionParams
+      filter:
+      - '#ffba00'
+      - '#ffbe00'
+      hash: '001105621699aa6916636267625926294a234b234a73623794230a33058c0023'
+      hash_type: dhash
+      crop: [6, 6, 198, 137]
+      delta: 10
+  back:
+    region: [6, 6, 198, 137]
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      hash: '00000000000000100020005a00b2017202e205d20f9213523e022d1200000c00'
+      hash_type: dhash
+      crop: [1821, 980, 1906, 1056]
+      delta: 5
+  select_battle:
+    episode:
+      selected_color:
+      - '#ffb200'
+      - '#ffb600'
+      box_model: !BoxModel
+        lt: [287, 154]
+        margin: [0, 20]
+        width: 192
+        height: 133
+    difficulty:
+      color_sample: [1360, 160, 1400, 200]
+      selected_color:
+      - - '#ffb200' # normal_color
+        - '#ffb600'
+      - - '#e63500' # emergency_color
+        - '#de3500'
+        - '#e63900'
+      - - '#104d6b' # midnight_color
+        - '#104963'
+        - '#104d63'
+      box_model: !BoxModel
+        lt: [1404, 228]
+        margin: [20, 0]
+        width: 152
+        height: 95
+    no:
+      cv_detection:
+      - !CvDetectionParams
+        filter:
+        - '#ffffff'
+        hash: '65116551755137313791e1a9f16b957bb51ba51bb91b9913b953a551a511a32a'
+        hash_type: dhash
+        crop: [456, 134, 674, 185]
+        delta: 10
+      box_model: !BoxModel
+        lt: [631, 349]
+        margin: [0, 38]
+        width: 1267
+        height: 139
+  normal_battle:
+    region: [1002, 813, 1236, 925]
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      hash: 'a4028000cc028f42934293428342a942a342a352a900a333ad37b34739b72527'
+      hash_type: dhash
+      crop: [219, 12, 374, 104]
+      delta: 10
+  in_select:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: 'ca43dad692949abcbb30ab923ab23a663a663a52b8563d742d75327138551b55'
+    hash_type: dhash
+    crop: [249, 132, 617, 207]
+    delta: 10
+  in_battle:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: 'a0028000c00285a281a285a2b5a291a29ba299a2b5a0a5ee2566332612a612a6'
+    hash_type: dhash
+    crop: [398, 12, 553, 104]
+    delta: 10
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: '864cca4c4864064f064d9a4cc8b62ab72ab72aa52ec72c0b3a6526456e434a46'
+    hash_type: dhash
+    crop: [1494, 937, 1623, 967]
+    delta: 10
+  in_fight:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    - '#ffba00'
+    - '#ffbe00'
+    hash: '093006c809300ad412d012d412d4125412540ad40ad412d4125012d409700920'
+    hash_type: dhash
+    crop: [922, 7, 996, 39]
+    delta: 10
+  ack_deploy: [1645, 924, 1894, 1019]
+  start_battle: [1497, 905, 1903, 1062]
+
+  supply: [1622, 794, 1918, 887]
+
+  walk_duration: 1100
+
+  in_settlement:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: 'd4aaccaeecae8cad4ca944a94ca968a948894a594e9444f464d5649624e62462'
+    hash_type: dhash
+    crop: [37, 40, 280, 100]
+    delta: 10
+  get_doll:
+  - !CvDetectionParams
+    filter:
+    - '#ffbe00'
+    - '#ffba00'
+    - '#bdbabd'
+    - '#adaaad'
+    hash: '0000000e10163216b20a3213e110cb2cc245cbc8e5183b185892581018000000'
+    hash_type: dhash
+    crop: [54, 31, 197, 102]
+    delta: 10
+
+  end_round: [1645, 929, 1885, 1051]
+
+  battle_settlement:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: '42ea4aaa4aaa5aac5aab5aab4aabc8ab4d8b4dabcdaacc56aad46aa66566a452'
+    hash_type: dhash
+    crop: [101, 161, 368, 222]
+    delta: 10
+
+
+  fairy_skill:
+    auto:
+      region: [1756, 302, 1890, 357]
+      color_sample: [1814, 313, 1824, 344]
+      on_color:
+      - '#ff6521'
+    use:
+      region: [1753, 585, 1887, 636]
+      unuse_color:
+      - '#f76529'

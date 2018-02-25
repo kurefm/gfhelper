@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from gfhelper.app import app
-
-app.setup()
-
 import core
 import b02
 import logging

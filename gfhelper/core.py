@@ -18,14 +18,17 @@ from random import randint
 import logging
 import re
 from cStringIO import StringIO
+
 from PIL import Image
 
 from .app import app
 from .tools import *
 from .tracer import tracer
 
+import inspect
+
 _traceable = tracer.traceable
-_logger = logging.getLogger(__name__)
+__logger = logging.getLogger(__name__)
 
 
 def adb_shell(*cmd, **kwargs):
@@ -54,7 +57,14 @@ def adb_shell(*cmd, **kwargs):
 
 
 def screencap():
-    return Image.open(StringIO(adb_shell('screencap', '-p').get('stdout')))
+    return Image.open(StringIO(adb_shell('screencap', '-p').get('stdout'))).convert('RGB')
+
+
+def launch_game():
+    adb_shell(
+        'am', 'start', '-n',
+        app.config.get('core.package') + '/' + app.config.get('core.activity')
+    )
 
 
 @_traceable()
@@ -83,15 +93,25 @@ def tap(*region):
     else:
         return
 
+    __logger.debug('Tap (%d, %d)' % tuple(point))
+
     adb_shell(
         'input', 'swipe',
         point[0], point[1], point[0], point[1],
         app.config.get('core.tap_duration')
     )
 
+    wait(app.config.get('core.tap_wait'))
+
+
+@_traceable()
+def tap_center():
+    tap(960, 540)
+
 
 @_traceable()
 def scroll_up(y):
+    __logger.debug('Scroll up %d' % y)
     adb_shell(
         'input', 'swipe',
         960, 200,  # from
@@ -102,6 +122,7 @@ def scroll_up(y):
 
 @_traceable()
 def scroll_down(y):
+    __logger.debug('Scroll down %d' % y)
     adb_shell(
         'input', 'swipe',
         960, 750,  # from
@@ -142,12 +163,12 @@ class Script(object):
     def name(self):
         return self._name
 
-    def run(self):
-        self._script()
+    def run(self, options=None):
+        self._script(options)
 
     def doc(self):
         return ', '.join(
-            filter(None, map(str.strip, re.split('\n', self._script.__doc__)))
+            filter(None, map(str.strip, re.split('\n', inspect.getdoc(self._script))))
         )
 
 

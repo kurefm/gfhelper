@@ -1,0 +1,82 @@
+# Formation config
+formation:
+  enter:
+    region: [1585, 627, 1878, 819]
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      - '#a4a6a4'
+      - '#cecace'
+      hash: '4000cc80cc9088809a009a809b901980999e8d9a199d14cd1c4d10ad14da1cca'
+      hash_type: dhash
+      crop: [289, 24, 660, 120]
+      delta: 10
+    - !CvDetectionParams
+      filter:
+      - '#ffba00'
+      - '#ffbe00'
+      hash: '0091056a0289aa691663626762592e294a234b234a7322379433023305cc0023'
+      hash_type: dhash
+      crop: [6, 6, 198, 137]
+      delta: 10
+  back:
+    region: [6, 6, 198, 137]
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      hash: '00000000000000100020005a00b2017202e205d20f9213523e022d1200000c00'
+      hash_type: dhash
+      crop: [1821, 980, 1906, 1056]
+      delta: 5
+  select_echelon:
+    selected_color:
+    - '#ffb200'
+    - '#ffb600'
+    box_model: !BoxModel
+      lt: [0, 162]
+      margin: [0, 20]
+      width: 183
+      height: 109
+  change_people:
+    box_model: !BoxModel
+      lt: [216, 308]
+      margin: [14, 0]
+      width: 262
+      height: 326
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      hash: '00000000000000632600006b26731a671a256625004503000029000000000000'
+      hash_type: dhash
+      crop: [6, 6, 198, 137]
+      delta: 10
+  select_people:
+    box_model: !BoxModel
+      lt: [11, 167]
+      margin: [24, 24]
+      width: 244
+      height: 431
+  orderby:
+    open: [1645, 166, 1900, 326]
+    box_model: !BoxModel
+      lt: [1372, 166]
+      margin: [0, 23]
+      width: 256
+      height: 117
+  filterby:
+    open: [1645, 350, 1900, 510]
+    ack: [1199, 982, 1611, 1064]
+    reset: [782, 982, 1195, 1064]
+    rarity: !BoxModel
+      lt: [797, 216]
+      margin: [14, 19]
+      width: 257
+      height: 116
+    type: !BoxModel
+      lt: [797, 538]
+      margin: [14, 19]
+      width: 257
+      height: 116

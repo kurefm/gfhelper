@@ -1,25 +1,14 @@
----
 # Core config
 core:
   adb_path: "/home/kurefm/Apps/android-sdk/platform-tools/adb"
   tap_duration: 50
+  tap_wait: 100
   scroll_duration: 500
   network_delay: 4000
   load_delay: 1500
   animation_delay: 750
   reserved_region: 10
-formation:
-  enter:
-    region: [1585, 627, 1878, 819]
-    cv_detection:
-    - !CvDetectionParams
-      filter:
-      - '#ffffff'
-      - '#a4a6a4'
-      - '#cecace'
-      hash: '4000cc80cc9088809a009a809b901980999e8d9a199d14cd1c4d10ad14da1cca'
-      hash_type: dhash
-      crop: [289, 24, 660, 120]
-      delta: 10
-  back:
-    region: [6, 6, 198, 137]
+  package: com.digitalsky.girlsfrontline.cn
+  activity: com.digitalsky.girlsfrontline.cn.UnityPlayerActivity
+cv:
+  ensure_duration: 0

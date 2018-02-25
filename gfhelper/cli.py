@@ -10,11 +10,13 @@ import time
 import random
 import logging
 from .app import app
-from .core import manager, screencap
-from .cv import filter_color
-from .tracer import tracer
+from . import core
 from . import formation
+from .cv import filter_color, check
+from .tracer import tracer
 import imagehash
+import os
+import inspect
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +41,7 @@ def cli():
 @cli.command()
 def info():
     """
-    Display info
+    [buildin] Display info
     """
     click.echo()
     click.echo('  current use: {}'.format(app.config.get('core.current_script')))
@@ -49,13 +51,21 @@ def info():
 
 
 @cli.command()
+def game():
+    """
+    [buildin] Launch girl's frontline
+    """
+    core.launch_game()
+
+
+@cli.command()
 def list():
     """
-    List all usable scripts
+    [buildin] List all usable scripts
     """
     click.echo()
-    for name, script in manager.scripts.items():
-        click.echo('  {:8} {}'.format(name, script.doc()))
+    for name, (_, doc) in app.scripts.items():
+        click.echo('  {:8} {}'.format(name, doc))
     click.echo()
 
 
@@ -63,46 +73,21 @@ def list():
 @click.argument('name', required=True)
 def use(name):
     """
-    Use script
+    [buildin] Use script
     """
     app.config.set('core.current_script', name)
     app.config.save()
 
 
-@cli.command()
-def run():
-    """
-    Run script
-    """
-    manager.get(app.config.get('core.current_script')).run()
+def command(name=None, cls=None, **attrs):
+    def decorator(f):
+        prefix = inspect.getmodulename(inspect.getfile(f))
+        doc = attrs.get('help') or inspect.getdoc(f)
 
+        if doc:
+            attrs['help'] = ('[%s] %s' % (prefix, doc)).decode('utf-8')
+        cmd = click.command(':'.join((prefix, name or f.__name__)), cls, **attrs)(f)
+        cli.add_command(cmd)
+        return cmd
 
-@cli.command()
-def test():
-    """
-    Developer test
-    """
-    formation.enter()
-    formation.back()
-
-
-@cli.command('cv:test')
-@click.argument('config_path')
-@click.option('--hash_size', '-s', default=16)
-def cv_test(config_path, hash_size):
-    params = app.config.get(config_path + '.cv_detection')[0]
-    img = screencap()
-
-    img = img.convert('RGB')
-    if params.crop:
-        img = img.crop(params.crop)
-
-    if params.filter:
-        filter_color(img, params.filter)
-
-    img.show()
-
-    hash = getattr(imagehash, params.hash_type)(img, hash_size)
-    _logger.info('CV detector hash: %s' % hash)
-    if params.hash:
-        _logger.info('Delta: %d' % (params.imghash - hash))
+    return decorator

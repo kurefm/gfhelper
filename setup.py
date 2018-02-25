@@ -17,7 +17,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        gfhelper=gfhelper.app:main
+        gfhelper=gfhelper.app:app.launch
     '''
 
 )

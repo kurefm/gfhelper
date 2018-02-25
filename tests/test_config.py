@@ -26,7 +26,7 @@ class ConditionParams(object):
 class TestYAMLConfig(TestCase):
     def setUp(self):
         self.config = config.YAMLConfig()
-        self.config.append('tests/resources/readonly.yaml', config.READONLY)
+        self.config.append('tests/resources/readonly.yaml', config.YAMLConfig.READONLY)
         self.config.append('tests/resources/writeable.yaml')
 
     def test_read_config(self):
@@ -45,19 +45,13 @@ class TestYAMLConfig(TestCase):
         self.config.save()
 
     def test_dump_object(self):
-        params = ConditionParams(
-            '123',
-            'dhash',
-            (190, 90, 290, 190),
-            ['#FFFFFF', '#343434'],
-            10
-        )
+        box = config.BoxModel()
         yaml = ruamel.yaml.YAML()
         yaml.register_class(ConditionParams)
         yaml.dump({
             'formation': {
                 'enter': {
-                    'check': [params]
+                    'box_model': box
                 }
             }
         }, sys.stdout)

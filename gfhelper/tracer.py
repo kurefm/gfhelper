@@ -127,7 +127,7 @@ class Tracer(object):
 
     @property
     def funcs(self):
-        return self._funcs  #TODO make read only
+        return self._funcs  # TODO make read only
 
     @property
     def isinterrupt(self):
@@ -136,17 +136,18 @@ class Tracer(object):
     def interrupt(self):
         self.__interrupt = True
 
-    def traceable(self, *dargs, **dkwargs):
+    def traceable(self, prefix=None, *dargs, **dkwargs):
         """
         Note: 不支持有返回值的函数，因为可能会被跳过执行
+        :param prefix:
         :param dargs:
         :param dkwargs:
         :return:
         """
 
         def decorator(f):
-            prefix = dkwargs['prefix'] if dkwargs.get('prefix') else inspect.getmodulename(inspect.getfile(f))
-            func_name = '.'.join([prefix, f.__name__])
+            _prefix = prefix or inspect.getmodulename(inspect.getfile(f))
+            func_name = '.'.join([_prefix, f.__name__])
             self._funcs[func_name] = f
             self._logger.info('Register function: {}'.format(func_name))
 
