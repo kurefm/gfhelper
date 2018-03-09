@@ -1,0 +1,62 @@
+restore:
+  enter: [1238, 273, 1532, 420]
+  back: [6, 6, 198, 137]
+
+  in_restore:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    - '#a4a6a4'
+    - '#cecace'
+    hash: '0041642861496349656a594af36ab368b30cb74a936c934e931b9aa49b28890c'
+    hash_type: dhash
+    crop: [270, 21, 529, 122]
+    delta: 5
+
+  in_doll_select:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: '00000000000000230600002326731a652a356635006523000029000000000000'
+    hash_type: dhash
+    crop: [6, 6, 198, 137]
+    delta: 5
+
+  select_slot: !BoxModel
+    lt: [76, 223]
+    margin: [16, 0]
+    width: 260
+    height: 380
+
+  select_doll: !BoxModel
+    lt: [11, 168]
+    margin: [24, 25]
+    width: 244
+    height: 431
+
+  ack: [1649, 751, 1897, 908]
+
+  restore_dialog:
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffffff'
+      hash: '4f04b8c274d1c4c4d4d0a4d2a4f0a4d0a4e8a236a11ad0ced8246710b8025f04'
+      hash_type: dhash
+      crop: [1312, 394, 1421, 503]
+      delta: 5
+    quick: [425, 714, 523, 807]
+    ack: [1261, 710, 1510, 803]
+
+  finish_dialog:
+    cv_detection:
+    - !CvDetectionParams
+      filter:
+      - '#ffba00'
+      - '#ffbe00'
+      hash: '6d63277332322e222682a23aa26e3366622226323662a36b6666b64222b369b3'
+      hash_type: dhash
+      crop: [730, 299, 1036, 365]
+      delta: 5
+    close: [835, 732, 1084, 827]
+

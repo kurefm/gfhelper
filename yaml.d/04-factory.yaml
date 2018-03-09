@@ -1,0 +1,70 @@
+factory:
+  enter: [1585, 439, 1879, 586]
+  back: [6, 6, 198, 137]
+
+  function:
+    box_model: !BoxModel
+      lt: [6, 179]
+      margin: [0, 22]
+      width: 256
+      height: 117
+    selected_color:
+    - '#ffb200'
+    - '#ffb600'
+
+  in_factory:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    - '#a4a6a4'
+    - '#cecace'
+    hash: '680048006a2066a0658065a0c5a895a0cdba9dbacd2d4e29682b64b8a59aa480'
+    hash_type: dhash
+    crop: [286, 20, 637, 124]
+    delta: 5
+
+  in_select:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: '00000000000000310600003526711a772a576655002523000014000000000000'
+    hash_type: dhash
+    crop: [6, 6, 198, 137]
+    delta: 5
+
+  retire:
+    box_model: !BoxModel
+      lt: [393, 215]
+      margin: [36, 0]
+      width: 263
+      height: 157
+    ack: [1629, 885, 1875, 979]
+    warn_dialog:
+      cv_detection:
+      - !CvDetectionParams
+        filter:
+        - '#ffffff'
+        hash: '3440b1c391b369b3f1a310c331b391137193f13391d2b041b1ab331b71e168c0'
+        hash_type: dhash
+        crop: [886, 356, 1003, 403]
+        delta: 5
+      ack: [996, 696, 1244, 790]
+
+  star:
+    box_model: !BoxModel
+      lt: [242, 5]
+      margin: [0, 0]
+      width: -23
+      height: 24
+    color:
+    - '#ffbe00'
+    - '#ffba00'
+
+  select_doll:
+    box_model: !BoxModel
+      lt: [11, 168]
+      margin: [24, 25]
+      width: 244
+      height: 431
+    ack: [1649, 891, 1897, 1048]
+

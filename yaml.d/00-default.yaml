@@ -1,0 +1,18 @@
+# Core config
+core:
+  adb_path: "adb"
+  reserved: 0.4 # 40%
+  tap_duration: 50
+  tap_wait: 110
+  scroll_duration: 500
+  network_delay: 4000
+  load_delay: 1500
+  animation_delay: 750
+  package: com.digitalsky.girlsfrontline.cn
+  activity: com.digitalsky.girlsfrontline.cn.UnityPlayerActivity
+  input:
+    device: /dev/input/event4
+  ext_scripts:
+  - gfhelper-ext
+cv:
+  ensure_duration: 0

@@ -1,0 +1,8 @@
+*.pyc
+screenshot/
+.idea/
+*.iml
+*.log
+*.log.*
+*.egg-info/
+sample/

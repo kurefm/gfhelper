@@ -1,0 +1,20 @@
+mainframe:
+  in_mainframe:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: '00000000000000100020005a00b2017202e205d20f9213523e022d1200000c00'
+    hash_type: dhash
+    crop: [1821, 980, 1906, 1056]
+    delta: 5
+
+  in_logistics_dialog:
+  - !CvDetectionParams
+    filter:
+    - '#ffffff'
+    hash: '274ad227f0d73dc8cb346564e59ceab72d23fd4ad8322b366a4b6d8c858cab93'
+    hash_type: dhash
+    crop: [656, 433, 1263, 479]
+    delta: 5
+
+  continue: [995, 696, 1244, 790]
